@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_grayish">#efefef</color>
     <color name="gray">#90a4ae</color>
+    <color name="foggy_blue">#3C787E</color>
+    <color name="foggy_grey">#9CAFB7</color>
+    <color name="swampy">#596869</color>
+    <color name="green_swampy">#36453B</color>
 </resources>

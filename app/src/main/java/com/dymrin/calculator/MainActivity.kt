@@ -105,8 +105,8 @@ class MainActivity : AppCompatActivity() {
 
                     binding.tvInput.text =
                         removeZeroAfterDot((one.toDouble() / two.toDouble()).toString())
-                } else if (tvValue.contains("*")) {
-                    val splitValue = tvValue.split("*")
+                } else if (tvValue.contains("X")) {
+                    val splitValue = tvValue.split("X")
                     var one = splitValue[0]
                     var two = splitValue[1]
 
