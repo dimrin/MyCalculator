@@ -10,26 +10,101 @@ import com.dymrin.calculator.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    var lastNumeric = false
-    var lastDot = false
+    private var lastNumeric = false
+    private var lastDot = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initNumberButtons()
+        initSpecialButtons()
     }
 
-    fun onDigit(view: View) {
+    private fun initNumberButtons() {
+        binding.apply {
+            btnNine.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnEight.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnSeven.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnSix.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnFive.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnFour.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnThree.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnTwo.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnOne.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnZero.setOnClickListener { view ->
+                setNumber(view)
+            }
+            btnDoubleZero.setOnClickListener { view ->
+                setNumber(view)
+            }
+        }
+    }
+
+    private fun initSpecialButtons() {
+        binding.apply {
+            btnClr.setOnClickListener {
+                clearTheLine()
+            }
+            btnPercent.setOnClickListener {
+//                TODO create the fun
+            }
+            btnBackspace.setOnClickListener {
+//                TODO create the fun
+                test()
+            }
+            btnDivide.setOnClickListener { view ->
+                setOperator(view)
+            }
+            btnMultiply.setOnClickListener { view ->
+                setOperator(view)
+            }
+            btnPlus.setOnClickListener { view ->
+                setOperator(view)
+            }
+            btnMinus.setOnClickListener { view ->
+                setOperator(view)
+            }
+            btnEqual.setOnClickListener {
+                getTheResult()
+            }
+            btnDot.setOnClickListener { view ->
+                setDecimalPoint(view)
+            }
+        }
+    }
+
+    private fun setNumber(view: View) {
         binding.tvInput.append((view as Button).text)
         lastNumeric = true
         lastDot = false
     }
 
-    fun onClear(view: View) {
+
+    private fun clearTheLine() {
         binding.tvInput.text = ""
     }
 
-    fun onDecimalPoint(view: View) {
+    private fun setDecimalPoint(view: View) {
         if (!binding.tvInput.text.contains(".")) {
             binding.tvInput.append(".")
         }
@@ -48,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun onOperator(view: View) {
+    private fun setOperator(view: View) {
         binding.tvInput.text.let {
             if (lastNumeric && !isOperatorAdded(it.toString())) {
                 binding.tvInput.append((view as Button).text)
@@ -59,8 +134,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun onEqual(view: View) {
-//        написать по новой с использованием string.endsWith
+    private fun getTheResult() {
+//       TODO написать по новой с использованием string.endsWith
 
         if (lastNumeric) {
             var tvValue = binding.tvInput.text
@@ -124,6 +199,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun test(){
+//        TODO change the name
+        val line = binding.tvInput.text
+        binding.tvInput.text = remove(line.toString())
+    }
+
+    private fun remove(result: String): String {
+        return result.substring(0, result.length - 1)
+    }
+
+
     private fun removeZeroAfterDot(result: String): String {
         var value = result
         if (result.contains(".0")) {
@@ -131,7 +217,6 @@ class MainActivity : AppCompatActivity() {
         }
         return value
     }
-
 
     private fun isOperatorAdded(value: String): Boolean {
         return if (value.startsWith("-")) false else {
