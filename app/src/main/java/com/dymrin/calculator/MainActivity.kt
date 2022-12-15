@@ -3,6 +3,7 @@ package com.dymrin.calculator
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.dymrin.calculator.databinding.ActivityMainBinding
 
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         initNumberButtons()
         initSpecialButtons()
+
     }
 
     private fun initNumberButtons() {
@@ -52,10 +54,10 @@ class MainActivity : AppCompatActivity() {
                 setNumber(view)
             }
             btnZero.setOnClickListener { view ->
-                setNumber(view)
+                setZero(view)
             }
             btnDoubleZero.setOnClickListener { view ->
-                setNumber(view)
+                setZero(view)
             }
         }
     }
@@ -69,8 +71,7 @@ class MainActivity : AppCompatActivity() {
 //                TODO create the fun
             }
             btnBackspace.setOnClickListener {
-//                TODO create the fun
-                test()
+                doBackspace()
             }
             btnDivide.setOnClickListener { view ->
                 setOperator(view)
@@ -87,8 +88,8 @@ class MainActivity : AppCompatActivity() {
             btnEqual.setOnClickListener {
                 getTheResult()
             }
-            btnDot.setOnClickListener { view ->
-                setDecimalPoint(view)
+            btnDot.setOnClickListener {
+                setDecimalPoint()
             }
         }
     }
@@ -104,38 +105,108 @@ class MainActivity : AppCompatActivity() {
         binding.tvInput.text = ""
     }
 
-    private fun setDecimalPoint(view: View) {
-        if (!binding.tvInput.text.contains(".")) {
-            binding.tvInput.append(".")
-        }
-//        if (!binding.tvInput.text.split(".").isEmpty()){
-//            val text = binding.tvInput.text.split('/', '+', '-', '*')[1]
-//            if (!text.contains(".")){
-//                binding.tvInput.append(".")
-//            }
-//        }
+    private fun setDecimalPoint() {
 
-//        if (lastNumeric || !lastDot){
-//            binding.tvInput.append(".")
-//            lastNumeric = false
-//            lastDot = true
-//        }
+        if (lastNumeric || !lastDot) {
+//            TODO solve problem with if starts with -
+            val line = binding.tvInput.text
+
+//            if (!isOperatorAdded(line.toString())){
+//                if (line.isEmpty() or line.startsWith("-")) {
+//                    if (!line.contains(".") || line == "-") {
+//                        binding.tvInput.append("0.")
+//                    }
+//                } else {
+//                    if (!line.contains(".")) {
+//                        binding.tvInput.append(".")
+//                    }
+//                }
+//            } else {
+//                val splitLine = line.split("-", "+", "x", "/")
+//                if (splitLine[1].isEmpty()) {
+//                    binding.tvInput.append("0.")
+//                } else {
+//                    binding.tvInput.append(".")
+//                }
+//                Toast.makeText(this, splitLine[1], Toast.LENGTH_LONG).show()
+//            }
+
+            if (isOperatorAdded(line.toString())) {
+                val splitLine = line.split("-", "+", "x", "/")
+                if (splitLine[1].isEmpty()) {
+                    binding.tvInput.append("0.")
+                } else {
+                    binding.tvInput.append(".")
+                }
+
+                Toast.makeText(this, splitLine[1], Toast.LENGTH_LONG).show()
+            } else {
+                if (line.isEmpty() or line.startsWith("-")) {
+                    if (!line.contains(".")) {
+                        binding.tvInput.append("0.")
+                    } else {
+                        binding.tvInput.append(".")
+                    }
+                } else {
+
+                    if (!line.contains(".")) {
+                        binding.tvInput.append(".")
+                    }
+                }
+            }
+            lastNumeric = false
+            lastDot = true
+        }
 
     }
 
+    private fun setZero(view: View) {
+        val line = binding.tvInput.text
+        if (line.isEmpty()) {
+            binding.tvInput.append(0.toString())
+        } else {
+            if (line.toString() != "0") {
+                setNumber(view)
+            }
+        }
+    }
+
     private fun setOperator(view: View) {
+        getTheResult()
         binding.tvInput.text.let {
+            if ((view as Button).text == "-") {
+                lastNumeric = true
+            }
             if (lastNumeric && !isOperatorAdded(it.toString())) {
-                binding.tvInput.append((view as Button).text)
+                binding.tvInput.append(view.text)
                 lastNumeric = false
                 lastDot = false
             }
         }
+    }
 
+
+    private fun splitForCalculate(
+        operator: String,
+        lineToSplit: String,
+        prefix: String
+    ): Array<Double> {
+        val splitValue = lineToSplit.split(operator)
+        var one = splitValue[0]
+        val two = splitValue[1]
+
+        if (prefix.isNotEmpty()) {
+            one = prefix + one
+        }
+
+        return arrayOf(one.toDouble(), two.toDouble())
     }
 
     private fun getTheResult() {
-//       TODO написать по новой с использованием string.endsWith
+        val plus = "+"
+        val minus = "-"
+        val multiply = "x"
+        val divide = "/"
 
         if (lastNumeric) {
             var tvValue = binding.tvInput.text
@@ -147,68 +218,58 @@ class MainActivity : AppCompatActivity() {
                     tvValue = tvValue.substring(1)
                 }
 
-                if (tvValue.contains("-")) {
-                    val splitValue = tvValue.split("-")
-                    var one = splitValue[0]
-                    var two = splitValue[1]
-
-                    if (prefix.isNotEmpty()) {
-                        one = prefix + one
-                    }
-
-                    binding.tvInput.text =
-                        removeZeroAfterDot((one.toDouble() - two.toDouble()).toString())
-                } else if (tvValue.contains("+")) {
-                    val splitValue = tvValue.split("+")
-                    var one = splitValue[0]
-                    var two = splitValue[1]
-
-                    if (prefix.isNotEmpty()) {
-                        one = prefix + one
-                    }
-
-                    binding.tvInput.text =
-                        removeZeroAfterDot((one.toDouble() + two.toDouble()).toString())
-                } else if (tvValue.contains("/")) {
-                    val splitValue = tvValue.split("/")
-                    var one = splitValue[0]
-                    var two = splitValue[1]
-
-                    if (prefix.isNotEmpty()) {
-                        one = prefix + one
-                    }
-
-                    binding.tvInput.text =
-                        removeZeroAfterDot((one.toDouble() / two.toDouble()).toString())
-                } else if (tvValue.contains("X")) {
-                    val splitValue = tvValue.split("X")
-                    var one = splitValue[0]
-                    var two = splitValue[1]
-
-                    if (prefix.isNotEmpty()) {
-                        one = prefix + one
-                    }
-
-                    binding.tvInput.text =
-                        removeZeroAfterDot((one.toDouble() * two.toDouble()).toString())
+                when {
+                    tvValue.contains(minus) -> binding.tvInput.text =
+                        removeZeroAfterDot(
+                            (splitForCalculate(minus, tvValue.toString(), prefix)[0]
+                                    - splitForCalculate(
+                                minus,
+                                tvValue.toString(),
+                                prefix
+                            )[1]).toString()
+                        )
+                    tvValue.contains(plus) -> binding.tvInput.text =
+                        removeZeroAfterDot(
+                            (splitForCalculate(plus, tvValue.toString(), prefix)[0]
+                                    + splitForCalculate(
+                                plus,
+                                tvValue.toString(),
+                                prefix
+                            )[1]).toString()
+                        )
+                    tvValue.contains(divide) -> binding.tvInput.text =
+                        removeZeroAfterDot(
+                            (splitForCalculate(divide, tvValue.toString(), prefix)[0]
+                                    / splitForCalculate(
+                                divide,
+                                tvValue.toString(),
+                                prefix
+                            )[1]).toString()
+                        )
+                    tvValue.contains(multiply) -> binding.tvInput.text =
+                        removeZeroAfterDot(
+                            (splitForCalculate(multiply, tvValue.toString(), prefix)[0]
+                                    * splitForCalculate(
+                                multiply,
+                                tvValue.toString(),
+                                prefix
+                            )[1]).toString()
+                        )
                 }
-
             } catch (e: java.lang.ArithmeticException) {
                 e.printStackTrace()
             }
         }
     }
 
-    fun test(){
-//        TODO change the name
+    private fun doBackspace() {
         val line = binding.tvInput.text
-        binding.tvInput.text = remove(line.toString())
+        binding.tvInput.text = deleteLastSymbol(line.toString())
     }
 
-    private fun remove(result: String): String {
+    private fun deleteLastSymbol(result: String): String {
         return result.substring(0, result.length - 1)
     }
-
 
     private fun removeZeroAfterDot(result: String): String {
         var value = result
@@ -220,8 +281,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun isOperatorAdded(value: String): Boolean {
         return if (value.startsWith("-")) false else {
-            value.contains("/") || value.contains("+") || value.contains("*") || value.contains("-")
+            value.contains("/") || value.contains("+") || value.contains("x") || value.contains("-")
         }
     }
+
 
 }
