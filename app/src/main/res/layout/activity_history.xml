@@ -3,16 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/foggy_grey"
     android:layout_height="match_parent"
+    android:background="@color/foggy_grey"
     tools:context=".HistoryActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_history"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -30,11 +29,11 @@
             android:id="@+id/toolbar_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:text="@string/toolbar_tv_value"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="20sp"
-            android:layout_gravity="start"/>
+            android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/toolbar_delete_all_btn"
@@ -49,13 +48,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHistory"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_history"
         tools:visibility="visible" />
 
     <TextView
@@ -70,7 +69,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_history"
         tools:visibility="visible" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

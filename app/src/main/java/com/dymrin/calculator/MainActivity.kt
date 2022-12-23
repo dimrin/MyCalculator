@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.dymrin.calculator.databinding.ActivityMainBinding
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -255,6 +257,7 @@ class MainActivity : AppCompatActivity() {
         if (lastNumeric) {
             var tvValue = lineToCalculate
             var prefix = ""
+            val dao = (application as CalculatorApp).db.historyDao()
             try {
                 if (tvValue.startsWith("-")) {
                     prefix = "-"
@@ -288,8 +291,9 @@ class MainActivity : AppCompatActivity() {
                                 prefix
                             )[1]).toString()
                         )
-                    tvValue.contains(multiply) -> binding.tvInput.text =
-                        removeZeroAfterDot(
+                    tvValue.contains(multiply) ->{
+
+                        val result = removeZeroAfterDot(
                             (splitForCalculate(multiply, tvValue, prefix)[0]
                                     * splitForCalculate(
                                 multiply,
@@ -297,6 +301,10 @@ class MainActivity : AppCompatActivity() {
                                 prefix
                             )[1]).toString()
                         )
+                        addResultToDatabase(dao, result)
+                        binding.tvInput.text = result
+
+                    }
                 }
             } catch (e: java.lang.ArithmeticException) {
                 e.printStackTrace()
@@ -353,5 +361,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun addResultToDatabase(historyDAO: HistoryDAO, result: String){
+        lifecycleScope.launch {
+            historyDAO.insert(HistoryEntity(result))
+        }
+    }
 
 }

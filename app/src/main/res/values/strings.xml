@@ -21,7 +21,6 @@
     <string name="doubleZero">00</string>
     <string name="backspace"><![CDATA[<-]]></string>
     <string name="content_description_for_history_button">History button</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_value_for_history_item">Result</string>
     <string name="content_description_for_delete_button">Delete all results button</string>
@@ -29,4 +28,6 @@
     <string name="no_results_available">NO RESULTS AVAILABLE</string>
     <string name="content_description_for_settings_button">Settings button</string>
     <string name="toolbar_settings_tv">SETTINGS</string>
+    <string name="app_version">0.5</string>
+    <string name="content_description_for_image_in_settings">Application logo</string>
 </resources>
