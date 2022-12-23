@@ -1,5 +1,6 @@
 package com.dymrin.calculator
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,8 +11,7 @@ import com.dymrin.calculator.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-//    TODO clean code and move parts to other packages, add top bar, set up app bar,
-//     add button for history, add another activity for history,
+//    TODO clean code and move parts to other packages,
 //     add room to save and show the history
 
     private lateinit var binding: ActivityMainBinding
@@ -22,9 +22,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
+        if (supportActionBar != null) {
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
 
         initNumberButtons()
         initSpecialButtons()
+
+        binding.toolbarHistoryBtn.setOnClickListener {
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.toolbarSettingsBtn.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
+
+
 
     }
 

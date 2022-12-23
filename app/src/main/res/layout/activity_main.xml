@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,10 +8,44 @@
     tools:context=".MainActivity">
 
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tvInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/toolbar_settings_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:background="@color/foggy_grey"
+            android:contentDescription="@string/content_description_for_settings_button"
+            android:src="@drawable/ic_baseline_settings_30" />
+
+        <ImageButton
+            android:id="@+id/toolbar_history_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:background="@color/foggy_grey"
+            android:contentDescription="@string/content_description_for_history_button"
+            android:src="@drawable/ic_baseline_history_30" />
+
+
+
+    </androidx.appcompat.widget.Toolbar>
+
     <TextView
         android:id="@+id/tvInput"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="250dp"
         android:gravity="bottom|end"
         android:padding="10dp"
         android:text=""
@@ -22,7 +54,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/month_grid"
@@ -46,6 +78,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/seven"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="0"
             app:layout_row="1" />
 
@@ -57,6 +90,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/eight"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="1"
             app:layout_row="1" />
 
@@ -68,6 +102,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/nine"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="2"
             app:layout_row="1" />
 
@@ -79,6 +114,7 @@
             android:background="@drawable/round_button_symbols"
             android:text="@string/divide"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="3"
             app:layout_row="0" />
 
@@ -90,6 +126,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/four"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="0"
             app:layout_row="2" />
 
@@ -101,6 +138,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/five"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="1"
             app:layout_row="2" />
 
@@ -112,6 +150,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/six"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="2"
             app:layout_row="2" />
 
@@ -123,6 +162,7 @@
             android:background="@drawable/round_button_symbols"
             android:text="@string/multiply"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="3"
             app:layout_row="1" />
 
@@ -135,6 +175,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/three"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="0"
             app:layout_row="3" />
 
@@ -146,6 +187,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/two"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="1"
             app:layout_row="3" />
 
@@ -157,6 +199,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/one"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="2"
             app:layout_row="3" />
 
@@ -168,6 +211,7 @@
             android:background="@drawable/round_button_symbols"
             android:text="@string/minus"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="3"
             app:layout_row="2" />
 
@@ -179,6 +223,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/dot"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="2"
             app:layout_row="4" />
 
@@ -190,6 +235,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/zero"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="1"
             app:layout_row="4" />
 
@@ -202,6 +248,7 @@
             android:text="@string/clr"
             android:textColor="@color/black"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="0"
             app:layout_row="0" />
 
@@ -213,6 +260,7 @@
             android:background="@drawable/round_button_symbols"
             android:text="@string/plus"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="3"
             app:layout_row="3" />
 
@@ -224,6 +272,7 @@
             android:background="@drawable/round_button_equal"
             android:text="@string/equal"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="3"
             app:layout_row="4" />
 
@@ -235,6 +284,7 @@
             android:background="@drawable/round_button_symbols"
             android:text="@string/percent"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="1"
             app:layout_row="0" />
 
@@ -246,6 +296,7 @@
             android:background="@drawable/round_button_numbers"
             android:text="@string/doubleZero"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="0"
             app:layout_row="4" />
 
@@ -257,199 +308,10 @@
             android:background="@drawable/round_button_symbols"
             android:text="@string/backspace"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_column="2"
             app:layout_row="0" />
 
 
     </androidx.gridlayout.widget.GridLayout>
-
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:layout_weight="1"-->
-    <!--        >-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonSeven"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/seven"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonEight"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/eight"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonNine"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/nine"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonDivide"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onOperator"-->
-    <!--            android:text="@string/divide"-->
-    <!--            />-->
-    <!--    </LinearLayout>-->
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:layout_weight="1"-->
-    <!--        >-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonFour"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/four"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonFive"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/five"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonSix"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/six"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonMultiply"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onOperator"-->
-    <!--            android:text="@string/multiply"-->
-    <!--            />-->
-    <!--    </LinearLayout>-->
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:layout_weight="1"-->
-    <!--        >-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonThree"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/three"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonTwo"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/two"-->
-    <!--            />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonOne"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/one"-->
-    <!--            android:contentDescription="TODO" />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonSubtract"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onOperator"-->
-    <!--            android:text="@string/minus"-->
-    <!--            />-->
-    <!--    </LinearLayout>-->
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:layout_weight="1"-->
-    <!--        >-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonDot"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDecimalPoint"-->
-    <!--            android:text="@string/dot"-->
-    <!--             />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonZero"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onDigit"-->
-    <!--            android:text="@string/zero"-->
-    <!--             />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonClr"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:textColor="@color/black"-->
-    <!--            android:onClick="onClear"-->
-    <!--            android:text="@string/clr"-->
-    <!--             />-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonPlus"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onOperator"-->
-    <!--            android:text="@string/plus"-->
-    <!--             />-->
-    <!--    </LinearLayout>-->
-    <!--    <LinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:layout_weight="1"-->
-    <!--        >-->
-    <!--        <Button-->
-    <!--            android:layout_margin="2dp"-->
-    <!--            android:id="@+id/buttonEqual"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:layout_weight="1"-->
-    <!--            android:onClick="onEqual"-->
-    <!--            android:text="@string/equal"-->
-    <!--            />-->
-    <!--    </LinearLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
