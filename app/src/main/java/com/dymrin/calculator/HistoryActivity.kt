@@ -93,7 +93,7 @@ class HistoryActivity : AppCompatActivity() {
 
     private fun checkForResults(historyDAO: HistoryDAO) {
         if (binding.tvNoResultsAvailable.visibility == View.VISIBLE) {
-            Toast.makeText(this, "No results to delete", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.toast_msg_for_no_results), Toast.LENGTH_LONG).show()
         } else {
             customDialogForBackButton(historyDAO)
         }
