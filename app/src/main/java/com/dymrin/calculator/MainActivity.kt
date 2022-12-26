@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.dymrin.calculator.databinding.ActivityMainBinding
@@ -14,7 +13,6 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
 //    TODO clean code and move parts to other packages,
-//     add room to save and show the history
 
     private lateinit var binding: ActivityMainBinding
     private var lastNumeric = false
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
+        binding.tvInput.text = getResultFromHistory()
 
 
     }
@@ -132,7 +130,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doPercent() {
-
         var isStartFromMinus = false
 
         if (lastNumeric) {
@@ -166,8 +163,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                Toast.makeText(this, line, Toast.LENGTH_LONG).show()
-
                 val splitLine: List<String> = line.split("-", "+", "x", "/")
                 val result = (splitLine[0].toDouble() / 100 * splitLine[1].toDouble()).toString()
 
@@ -180,14 +175,17 @@ class MainActivity : AppCompatActivity() {
                 getTheResult(line)
 
             } else {
-                binding.tvInput.text = (line.toDouble() / 100).toString()
+                val dao = (application as CalculatorApp).db.historyDao()
+                val result = (line.toDouble() / 100).toString()
+                addResultToDatabase(dao, "$line% = $result")
+
+                binding.tvInput.text = result
             }
 
         }
     }
 
     private fun setDecimalPoint() {
-
         if (lastNumeric || !lastDot) {
             val line = binding.tvInput.text
 
@@ -200,7 +198,6 @@ class MainActivity : AppCompatActivity() {
                         binding.tvInput.append(".")
                     }
                 }
-                Toast.makeText(this, splitLine[1], Toast.LENGTH_LONG).show()
             } else {
                 if (line.substring(1).isEmpty() && line.startsWith("-")) {
                     if (!line.contains(".")) {
@@ -264,8 +261,8 @@ class MainActivity : AppCompatActivity() {
                     tvValue = tvValue.substring(1)
                 }
                 when {
-                    tvValue.contains(minus) -> binding.tvInput.text =
-                        removeZeroAfterDot(
+                    tvValue.contains(minus) -> {
+                        val result = removeZeroAfterDot(
                             (splitForCalculate(minus, tvValue, prefix)[0]
                                     - splitForCalculate(
                                 minus,
@@ -273,8 +270,12 @@ class MainActivity : AppCompatActivity() {
                                 prefix
                             )[1]).toString()
                         )
-                    tvValue.contains(plus) -> binding.tvInput.text =
-                        removeZeroAfterDot(
+                        addResultToDatabase(dao, "$prefix$tvValue = $result")
+                        binding.tvInput.text = result
+                    }
+                    tvValue.contains(plus) -> {
+
+                        val result = removeZeroAfterDot(
                             (splitForCalculate(plus, tvValue, prefix)[0]
                                     + splitForCalculate(
                                 plus,
@@ -282,8 +283,12 @@ class MainActivity : AppCompatActivity() {
                                 prefix
                             )[1]).toString()
                         )
-                    tvValue.contains(divide) -> binding.tvInput.text =
-                        removeZeroAfterDot(
+                        addResultToDatabase(dao, "$prefix$tvValue = $result")
+                        binding.tvInput.text = result
+                    }
+                    tvValue.contains(divide) -> {
+
+                        val result = removeZeroAfterDot(
                             (splitForCalculate(divide, tvValue, prefix)[0]
                                     / splitForCalculate(
                                 divide,
@@ -291,7 +296,10 @@ class MainActivity : AppCompatActivity() {
                                 prefix
                             )[1]).toString()
                         )
-                    tvValue.contains(multiply) ->{
+                        addResultToDatabase(dao, "$prefix$tvValue = $result")
+                        binding.tvInput.text = result
+                    }
+                    tvValue.contains(multiply) -> {
 
                         val result = removeZeroAfterDot(
                             (splitForCalculate(multiply, tvValue, prefix)[0]
@@ -301,9 +309,8 @@ class MainActivity : AppCompatActivity() {
                                 prefix
                             )[1]).toString()
                         )
-                        addResultToDatabase(dao, result)
+                        addResultToDatabase(dao, "$prefix$tvValue = $result")
                         binding.tvInput.text = result
-
                     }
                 }
             } catch (e: java.lang.ArithmeticException) {
@@ -361,10 +368,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addResultToDatabase(historyDAO: HistoryDAO, result: String){
+    private fun addResultToDatabase(historyDAO: HistoryDAO, result: String) {
         lifecycleScope.launch {
             historyDAO.insert(HistoryEntity(result))
         }
+    }
+
+    private fun getResultFromHistory(): String {
+        val result = intent.getStringExtra("result")
+        return if (result != null) {
+            lastNumeric = true
+            result
+        } else {
+            ""
+        }
+
     }
 
 }

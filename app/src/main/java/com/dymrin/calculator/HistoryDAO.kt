@@ -1,7 +1,6 @@
 package com.dymrin.calculator
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -19,10 +18,7 @@ interface HistoryDAO {
     fun getResults(): Flow<List<HistoryEntity>>
 
     @Query("DELETE FROM `history-table`")
-    fun deleteAllResults()
-
-    @Delete
-    suspend fun deleteTheResult(historyEntity: HistoryEntity)
+    suspend fun deleteAllResults()
 
 
 

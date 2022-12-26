@@ -1,9 +1,7 @@
 package com.dymrin.calculator
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.dymrin.calculator.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -20,7 +18,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.toolbarBackPressedBtn.setOnClickListener {
-            onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
 
     }
