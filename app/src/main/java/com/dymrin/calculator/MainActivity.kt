@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 doPercent()
             }
             btnBackspace.setOnClickListener {
-                doBackspace()
+                setLineAfterBackspace()
             }
             btnDivide.setOnClickListener { view ->
                 setOperator(view)
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 setOperator(view)
             }
             btnEqual.setOnClickListener {
-                getTheResult()
+                setTheResult()
             }
             btnDot.setOnClickListener {
                 setDecimalPoint()
@@ -124,9 +124,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun clearTheLine() {
-        binding.tvInput.text = ""
+        binding.tvInput.text = setEmptyLine()
         lastNumeric = false
         lastDot = false
+    }
+
+    fun setEmptyLine(): String {
+        return ""
     }
 
     private fun doPercent() {
@@ -141,17 +145,17 @@ class MainActivity : AppCompatActivity() {
             }
             if (isOperatorAdded(line)) {
                 if (line.contains("/") or line.contains("x")) {
-                    val splitLineFor: List<String> = line.split("-", "+", "x", "/")
-                    val resultFor = (splitLineFor[1].toDouble() / 100).toString()
+                    val splitLine: List<String> = line.split("-", "+", "x", "/")
+                    val result = (splitLine[1].toDouble() / 100).toString()
                     line = line.replaceRange(
-                        line.length - splitLineFor[1].length,
+                        line.length - splitLine[1].length,
                         line.lastIndex + 1,
-                        resultFor
+                        result
                     )
                     if (isStartFromMinus) {
                         line = "-$line"
                     }
-                    getTheResult(line)
+                    setTheResult(line)
                     return
                 }
 
@@ -172,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                 if (isStartFromMinus) {
                     line = "-$line"
                 }
-                getTheResult(line)
+                setTheResult(line)
 
             } else {
                 val dao = (application as CalculatorApp).db.historyDao()
@@ -199,7 +203,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                if (line.substring(1).isEmpty() && line.startsWith("-")) {
+                if (line.isEmpty() || (line.substring(1).isEmpty() && line.startsWith("-"))) {
                     if (!line.contains(".")) {
                         binding.tvInput.append("0.")
                     } else {
@@ -229,10 +233,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setOperator(view: View) {
-        getTheResult()
+        setTheResult()
         binding.tvInput.text.let {
             if ((view as Button).text == "-") {
-                if (it.isNullOrEmpty()) {
+                if (it.isEmpty()) {
                     binding.tvInput.append("-")
                 }
             }
@@ -244,72 +248,64 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun doPlus(splitLine: Array<Double>): String {
+        return removeZeroAfterDot(
+            (splitLine[0]
+                    + splitLine[1]).toString()
+        )
+    }
 
-    private fun getTheResult(lineToCalculate: String = binding.tvInput.text.toString()) {
+    fun doMinus(splitLine: Array<Double>): String {
+        return removeZeroAfterDot(
+            (splitLine[0]
+                    - splitLine[1]).toString()
+        )
+    }
+
+    fun doDivide(splitLine: Array<Double>): String {
+        return removeZeroAfterDot(
+            (splitLine[0]
+                    / splitLine[1]).toString()
+        )
+    }
+
+    fun doMultiply(splitLine: Array<Double>): String {
+        return removeZeroAfterDot(
+            (splitLine[0]
+                    * splitLine[1]).toString()
+        )
+    }
+
+    private fun setTheResult(lineToCalculate: String = binding.tvInput.text.toString()) {
         val plus = "+"
         val minus = "-"
         val multiply = "x"
         val divide = "/"
 
         if (lastNumeric) {
-            var tvValue = lineToCalculate
-            var prefix = ""
             val dao = (application as CalculatorApp).db.historyDao()
             try {
-                if (tvValue.startsWith("-")) {
-                    prefix = "-"
-                    tvValue = tvValue.substring(1)
-                }
                 when {
-                    tvValue.contains(minus) -> {
-                        val result = removeZeroAfterDot(
-                            (splitForCalculate(minus, tvValue, prefix)[0]
-                                    - splitForCalculate(
-                                minus,
-                                tvValue,
-                                prefix
-                            )[1]).toString()
-                        )
-                        addResultToDatabase(dao, "$prefix$tvValue = $result")
+                    lineToCalculate.substring(1).contains(minus) -> {
+                        val result = doMinus(splitForCalculate(minus, lineToCalculate))
+                        addResultToDatabase(dao, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
-                    tvValue.contains(plus) -> {
-
-                        val result = removeZeroAfterDot(
-                            (splitForCalculate(plus, tvValue, prefix)[0]
-                                    + splitForCalculate(
-                                plus,
-                                tvValue,
-                                prefix
-                            )[1]).toString()
-                        )
-                        addResultToDatabase(dao, "$prefix$tvValue = $result")
+                    lineToCalculate.contains(plus) -> {
+                        val result = doPlus(splitForCalculate(plus, lineToCalculate))
+                        addResultToDatabase(dao, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
-                    tvValue.contains(divide) -> {
+                    lineToCalculate.contains(divide) -> {
 
-                        val result = removeZeroAfterDot(
-                            (splitForCalculate(divide, tvValue, prefix)[0]
-                                    / splitForCalculate(
-                                divide,
-                                tvValue,
-                                prefix
-                            )[1]).toString()
-                        )
-                        addResultToDatabase(dao, "$prefix$tvValue = $result")
+                        val result = doDivide(splitForCalculate(divide, lineToCalculate))
+                        addResultToDatabase(dao, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
-                    tvValue.contains(multiply) -> {
+                    lineToCalculate.contains(multiply) -> {
 
-                        val result = removeZeroAfterDot(
-                            (splitForCalculate(multiply, tvValue, prefix)[0]
-                                    * splitForCalculate(
-                                multiply,
-                                tvValue,
-                                prefix
-                            )[1]).toString()
-                        )
-                        addResultToDatabase(dao, "$prefix$tvValue = $result")
+                        val result = doMultiply(splitForCalculate(multiply, lineToCalculate))
+                        addResultToDatabase(dao, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
                 }
@@ -321,9 +317,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun splitForCalculate(
         operator: String,
-        lineToSplit: String,
-        prefix: String
+        lineToEdit: String
     ): Array<Double> {
+
+        var lineToSplit = lineToEdit
+        var prefix = ""
+
+        if (lineToSplit.startsWith("-")) {
+            prefix = "-"
+            lineToSplit = lineToSplit.substring(1)
+        }
+
         val splitValue = lineToSplit.split(operator)
         var one = splitValue[0]
         val two = splitValue[1]
@@ -337,20 +341,23 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun doBackspace() {
-        val line = binding.tvInput.text
-        if (line.isNotEmpty()) {
-            binding.tvInput.text = deleteLastSymbol(line.toString())
-            if (!line.startsWith("-") && line.length > 1) {
-                lastNumeric = true
+    private fun setLineAfterBackspace(){
+        binding.tvInput.text = doBackspace(binding.tvInput.text.toString())
+    }
+
+    private fun doBackspace(lineToEdit: String): String {
+        if (lineToEdit.isNotEmpty()) {
+            val result = deleteLastSymbol(lineToEdit)
+            if (result.isEmpty()){
+                lastNumeric = false
             }
+            lastNumeric = !lineToEdit.startsWith("-") && lineToEdit.length > 1
+            return result
         }
+        return ""
     }
 
     private fun deleteLastSymbol(result: String): String {
-        if (result.endsWith("0.")) {
-            return result.substring(0, result.length - 2)
-        }
         return result.substring(0, result.length - 1)
     }
 
@@ -382,7 +389,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             ""
         }
-
     }
 
 }

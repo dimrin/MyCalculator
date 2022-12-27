@@ -73,7 +73,7 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun customDialogForBackButton(historyDAO: HistoryDAO) {
+    private fun customDialogForDeleteAllButton(historyDAO: HistoryDAO) {
         val customDialog = Dialog(this)
         val dialogBinding = DialogCustomDeleteAllConfirmatonBinding.inflate(layoutInflater)
         customDialog.setContentView(dialogBinding.root)
@@ -95,7 +95,7 @@ class HistoryActivity : AppCompatActivity() {
         if (binding.tvNoResultsAvailable.visibility == View.VISIBLE) {
             Toast.makeText(this, getString(R.string.toast_msg_for_no_results), Toast.LENGTH_LONG).show()
         } else {
-            customDialogForBackButton(historyDAO)
+            customDialogForDeleteAllButton(historyDAO)
         }
     }
 
