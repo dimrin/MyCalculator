@@ -1,4 +1,4 @@
-package com.dymrin.calculator
+package com.dymrin.calculator.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

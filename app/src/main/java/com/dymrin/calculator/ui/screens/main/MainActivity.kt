@@ -1,4 +1,4 @@
-package com.dymrin.calculator
+package com.dymrin.calculator.ui.screens.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,13 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.dymrin.calculator.data.app.CalculatorApp
+import com.dymrin.calculator.data.data.dao.HistoryDAO
+import com.dymrin.calculator.data.data.repository.HistoryRepository
+import com.dymrin.calculator.data.model.HistoryEntity
 import com.dymrin.calculator.databinding.ActivityMainBinding
+import com.dymrin.calculator.ui.screens.history.HistoryActivity
+import com.dymrin.calculator.ui.screens.settings.SettingsActivity
 import kotlinx.coroutines.launch
 
 
@@ -28,8 +34,12 @@ class MainActivity : AppCompatActivity() {
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
+        val repository = HistoryRepository((application as CalculatorApp).db.historyDao())
+
         initNumberButtons()
-        initSpecialButtons()
+        initSpecialButtons(repository)
+
+
 
         binding.toolbarHistoryBtn.setOnClickListener {
             val intent = Intent(this, HistoryActivity::class.java)
@@ -84,37 +94,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initSpecialButtons() {
+    private fun initSpecialButtons(historyRepository: HistoryRepository) {
         binding.apply {
             btnClr.setOnClickListener {
                 clearTheLine()
             }
             btnPercent.setOnClickListener {
-                doPercent()
+                doPercent(historyRepository)
             }
             btnBackspace.setOnClickListener {
                 setLineAfterBackspace()
             }
             btnDivide.setOnClickListener { view ->
-                setOperator(view)
+                setOperator(historyRepository,view)
             }
             btnMultiply.setOnClickListener { view ->
-                setOperator(view)
+                setOperator(historyRepository,view)
             }
             btnPlus.setOnClickListener { view ->
-                setOperator(view)
+                setOperator(historyRepository,view)
             }
             btnMinus.setOnClickListener { view ->
-                setOperator(view)
+                setOperator(historyRepository,view)
             }
             btnEqual.setOnClickListener {
-                setTheResult()
+                setTheResult(historyRepository)
             }
             btnDot.setOnClickListener {
                 setDecimalPoint()
             }
         }
     }
+
+    private fun getScreenInfo(): String = binding.tvInput.text.toString()
 
     private fun setNumber(view: View) {
         binding.tvInput.append((view as Button).text)
@@ -133,7 +145,7 @@ class MainActivity : AppCompatActivity() {
         return ""
     }
 
-    private fun doPercent() {
+    private fun doPercent(historyRepository: HistoryRepository) {
         var isStartFromMinus = false
 
         if (lastNumeric) {
@@ -155,7 +167,7 @@ class MainActivity : AppCompatActivity() {
                     if (isStartFromMinus) {
                         line = "-$line"
                     }
-                    setTheResult(line)
+                    setTheResult(historyRepository,line)
                     return
                 }
 
@@ -176,13 +188,10 @@ class MainActivity : AppCompatActivity() {
                 if (isStartFromMinus) {
                     line = "-$line"
                 }
-                setTheResult(line)
+                setTheResult(historyRepository,line)
 
             } else {
-                val dao = (application as CalculatorApp).db.historyDao()
                 val result = (line.toDouble() / 100).toString()
-                addResultToDatabase(dao, "$line% = $result")
-
                 binding.tvInput.text = result
             }
 
@@ -232,8 +241,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setOperator(view: View) {
-        setTheResult()
+    private fun setOperator(historyRepository: HistoryRepository,view: View) {
+        setTheResult(historyRepository)
         binding.tvInput.text.let {
             if ((view as Button).text == "-") {
                 if (it.isEmpty()) {
@@ -276,36 +285,35 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun setTheResult(lineToCalculate: String = binding.tvInput.text.toString()) {
+    private fun setTheResult(historyRepository: HistoryRepository,lineToCalculate: String = binding.tvInput.text.toString()) {
         val plus = "+"
         val minus = "-"
         val multiply = "x"
         val divide = "/"
 
         if (lastNumeric) {
-            val dao = (application as CalculatorApp).db.historyDao()
             try {
                 when {
                     lineToCalculate.substring(1).contains(minus) -> {
                         val result = doMinus(splitForCalculate(minus, lineToCalculate))
-                        addResultToDatabase(dao, "$lineToCalculate = $result")
+                        addResultToDatabase(historyRepository, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
                     lineToCalculate.contains(plus) -> {
                         val result = doPlus(splitForCalculate(plus, lineToCalculate))
-                        addResultToDatabase(dao, "$lineToCalculate = $result")
+                        addResultToDatabase(historyRepository, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
                     lineToCalculate.contains(divide) -> {
 
                         val result = doDivide(splitForCalculate(divide, lineToCalculate))
-                        addResultToDatabase(dao, "$lineToCalculate = $result")
+                        addResultToDatabase(historyRepository, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
                     lineToCalculate.contains(multiply) -> {
 
                         val result = doMultiply(splitForCalculate(multiply, lineToCalculate))
-                        addResultToDatabase(dao, "$lineToCalculate = $result")
+                        addResultToDatabase(historyRepository, "$lineToCalculate = $result")
                         binding.tvInput.text = result
                     }
                 }
@@ -375,9 +383,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addResultToDatabase(historyDAO: HistoryDAO, result: String) {
+    private fun addResultToDatabase(historyRepository: HistoryRepository, result: String) {
         lifecycleScope.launch {
-            historyDAO.insert(HistoryEntity(result))
+            historyRepository.addTheResult(HistoryEntity(result))
         }
     }
 

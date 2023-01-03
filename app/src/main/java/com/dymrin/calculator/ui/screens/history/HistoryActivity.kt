@@ -1,4 +1,4 @@
-package com.dymrin.calculator
+package com.dymrin.calculator.ui.screens.history
 
 import android.app.Dialog
 import android.content.Intent
@@ -8,8 +8,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dymrin.calculator.R
+import com.dymrin.calculator.data.app.CalculatorApp
+import com.dymrin.calculator.data.data.repository.HistoryRepository
+import com.dymrin.calculator.data.utils.HistoryAdapter
 import com.dymrin.calculator.databinding.ActivityHistoryBinding
 import com.dymrin.calculator.databinding.DialogCustomDeleteAllConfirmatonBinding
+import com.dymrin.calculator.ui.screens.main.MainActivity
 import kotlinx.coroutines.launch
 
 class HistoryActivity : AppCompatActivity() {
@@ -27,17 +32,17 @@ class HistoryActivity : AppCompatActivity() {
             supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        val dao = (application as CalculatorApp).db.historyDao()
+        val repository = HistoryRepository((application as CalculatorApp).db.historyDao())
 
         binding.toolbarBackPressedBtn.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
         binding.toolbarDeleteAllBtn.setOnClickListener {
-            checkForResults(dao)
+            checkForResults(repository)
         }
 
-        getAllResults(dao) {
+        getAllResults(repository) {
             val resultToSent = it.trim().split("=")
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("result", resultToSent[1])
@@ -47,9 +52,9 @@ class HistoryActivity : AppCompatActivity() {
 
     }
 
-    private fun getAllResults(historyDAO: HistoryDAO, clickOnItem: (String) -> Unit) {
+    private fun getAllResults(historyRepository: HistoryRepository, clickOnItem: (String) -> Unit) {
         lifecycleScope.launch {
-            historyDAO.getResults().collect { allResults ->
+            historyRepository.getAllResults().collect { allResults ->
                 if (allResults.isNotEmpty()) {
                     binding.rvHistory.visibility = View.VISIBLE
                     binding.tvNoResultsAvailable.visibility = View.INVISIBLE
@@ -73,14 +78,14 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun customDialogForDeleteAllButton(historyDAO: HistoryDAO) {
+    private fun customDialogForDeleteAllButton(historyRepository: HistoryRepository) {
         val customDialog = Dialog(this)
         val dialogBinding = DialogCustomDeleteAllConfirmatonBinding.inflate(layoutInflater)
         customDialog.setContentView(dialogBinding.root)
         customDialog.setCanceledOnTouchOutside(false)
         dialogBinding.btnYes.setOnClickListener {
             lifecycleScope.launch {
-                historyDAO.deleteAllResults()
+                historyRepository.deleteAllResults()
             }
             customDialog.dismiss()
         }
@@ -91,11 +96,11 @@ class HistoryActivity : AppCompatActivity() {
         customDialog.show()
     }
 
-    private fun checkForResults(historyDAO: HistoryDAO) {
+    private fun checkForResults(historyRepository: HistoryRepository) {
         if (binding.tvNoResultsAvailable.visibility == View.VISIBLE) {
             Toast.makeText(this, getString(R.string.toast_msg_for_no_results), Toast.LENGTH_LONG).show()
         } else {
-            customDialogForDeleteAllButton(historyDAO)
+            customDialogForDeleteAllButton(historyRepository)
         }
     }
 

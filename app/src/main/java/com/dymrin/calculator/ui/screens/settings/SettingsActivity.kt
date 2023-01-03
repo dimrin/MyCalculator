@@ -1,4 +1,4 @@
-package com.dymrin.calculator
+package com.dymrin.calculator.ui.screens.settings
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

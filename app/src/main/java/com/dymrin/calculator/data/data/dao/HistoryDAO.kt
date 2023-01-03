@@ -1,9 +1,10 @@
-package com.dymrin.calculator
+package com.dymrin.calculator.data.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.dymrin.calculator.data.model.HistoryEntity
 import kotlinx.coroutines.flow.Flow
 
 

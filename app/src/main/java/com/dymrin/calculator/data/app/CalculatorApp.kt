@@ -1,6 +1,7 @@
-package com.dymrin.calculator
+package com.dymrin.calculator.data.app
 
 import android.app.Application
+import com.dymrin.calculator.data.data.db.HistoryDatabase
 
 class CalculatorApp : Application() {
 

@@ -10,7 +10,7 @@
 
     <application
         android:allowBackup="true"
-        android:name=".CalculatorApp"
+        android:name=".data.app.CalculatorApp"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -20,7 +20,7 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:targetApi="33">
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.screens.settings.SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -28,7 +28,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".HistoryActivity"
+            android:name=".ui.screens.history.HistoryActivity"
             android:exported="false"
             android:screenOrientation="portrait">
             <meta-data
@@ -36,7 +36,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.screens.main.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

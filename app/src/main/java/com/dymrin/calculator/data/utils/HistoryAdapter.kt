@@ -1,4 +1,4 @@
-package com.dymrin.calculator
+package com.dymrin.calculator.data.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
