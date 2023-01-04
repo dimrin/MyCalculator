@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
 
 
-class HistoryRepository(private val dao: HistoryDAO ) {
+class HistoryRepository(private val dao: HistoryDAO) {
 
     suspend fun addTheResult(historyEntity: HistoryEntity) = dao.insert(historyEntity)
     suspend fun deleteAllResults() = dao.deleteAllResults()
-    fun getAllResults(): Flow<List<HistoryEntity>> = dao.getResults().flowOn(Dispatchers.IO).conflate()
+    fun getAllResults(): Flow<List<HistoryEntity>> =
+        dao.getResults().flowOn(Dispatchers.IO).conflate()
 }

@@ -98,7 +98,8 @@ class HistoryActivity : AppCompatActivity() {
 
     private fun checkForResults(historyRepository: HistoryRepository) {
         if (binding.tvNoResultsAvailable.visibility == View.VISIBLE) {
-            Toast.makeText(this, getString(R.string.toast_msg_for_no_results), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.toast_msg_for_no_results), Toast.LENGTH_LONG)
+                .show()
         } else {
             customDialogForDeleteAllButton(historyRepository)
         }

@@ -7,9 +7,9 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.dymrin.calculator.data.app.CalculatorApp
-import com.dymrin.calculator.data.data.dao.HistoryDAO
 import com.dymrin.calculator.data.data.repository.HistoryRepository
 import com.dymrin.calculator.data.model.HistoryEntity
+import com.dymrin.calculator.data.utils.*
 import com.dymrin.calculator.databinding.ActivityMainBinding
 import com.dymrin.calculator.ui.screens.history.HistoryActivity
 import com.dymrin.calculator.ui.screens.settings.SettingsActivity
@@ -17,8 +17,6 @@ import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
-
-//    TODO clean code and move parts to other packages,
 
     private lateinit var binding: ActivityMainBinding
     private var lastNumeric = false
@@ -100,22 +98,22 @@ class MainActivity : AppCompatActivity() {
                 clearTheLine()
             }
             btnPercent.setOnClickListener {
-                doPercent(historyRepository)
+                doPercent(getScreenInfo(), historyRepository)
             }
             btnBackspace.setOnClickListener {
                 setLineAfterBackspace()
             }
             btnDivide.setOnClickListener { view ->
-                setOperator(historyRepository,view)
+                setOperator(historyRepository, view)
             }
             btnMultiply.setOnClickListener { view ->
-                setOperator(historyRepository,view)
+                setOperator(historyRepository, view)
             }
             btnPlus.setOnClickListener { view ->
-                setOperator(historyRepository,view)
+                setOperator(historyRepository, view)
             }
             btnMinus.setOnClickListener { view ->
-                setOperator(historyRepository,view)
+                setOperator(historyRepository, view)
             }
             btnEqual.setOnClickListener {
                 setTheResult(historyRepository)
@@ -141,16 +139,13 @@ class MainActivity : AppCompatActivity() {
         lastDot = false
     }
 
-    fun setEmptyLine(): String {
-        return ""
-    }
 
-    private fun doPercent(historyRepository: HistoryRepository) {
+    private fun doPercent(lineToCalculate: String, historyRepository: HistoryRepository) {
         var isStartFromMinus = false
 
         if (lastNumeric) {
 
-            var line = binding.tvInput.text.toString()
+            var line = lineToCalculate
             if (line.startsWith("-")) {
                 line = line.substring(1)
                 isStartFromMinus = true
@@ -167,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                     if (isStartFromMinus) {
                         line = "-$line"
                     }
-                    setTheResult(historyRepository,line)
+                    setTheResult(historyRepository, line)
                     return
                 }
 
@@ -188,7 +183,7 @@ class MainActivity : AppCompatActivity() {
                 if (isStartFromMinus) {
                     line = "-$line"
                 }
-                setTheResult(historyRepository,line)
+                setTheResult(historyRepository, line)
 
             } else {
                 val result = (line.toDouble() / 100).toString()
@@ -241,7 +236,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setOperator(historyRepository: HistoryRepository,view: View) {
+    private fun setOperator(historyRepository: HistoryRepository, view: View) {
         setTheResult(historyRepository)
         binding.tvInput.text.let {
             if ((view as Button).text == "-") {
@@ -257,35 +252,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun doPlus(splitLine: Array<Double>): String {
-        return removeZeroAfterDot(
-            (splitLine[0]
-                    + splitLine[1]).toString()
-        )
-    }
 
-    fun doMinus(splitLine: Array<Double>): String {
-        return removeZeroAfterDot(
-            (splitLine[0]
-                    - splitLine[1]).toString()
-        )
-    }
-
-    fun doDivide(splitLine: Array<Double>): String {
-        return removeZeroAfterDot(
-            (splitLine[0]
-                    / splitLine[1]).toString()
-        )
-    }
-
-    fun doMultiply(splitLine: Array<Double>): String {
-        return removeZeroAfterDot(
-            (splitLine[0]
-                    * splitLine[1]).toString()
-        )
-    }
-
-    private fun setTheResult(historyRepository: HistoryRepository,lineToCalculate: String = binding.tvInput.text.toString()) {
+    private fun setTheResult(
+        historyRepository: HistoryRepository,
+        lineToCalculate: String = binding.tvInput.text.toString()
+    ) {
         val plus = "+"
         val minus = "-"
         val multiply = "x"
@@ -323,40 +294,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun splitForCalculate(
-        operator: String,
-        lineToEdit: String
-    ): Array<Double> {
 
-        var lineToSplit = lineToEdit
-        var prefix = ""
-
-        if (lineToSplit.startsWith("-")) {
-            prefix = "-"
-            lineToSplit = lineToSplit.substring(1)
-        }
-
-        val splitValue = lineToSplit.split(operator)
-        var one = splitValue[0]
-        val two = splitValue[1]
-        return if (two.isNotEmpty()) {
-            if (prefix.isNotEmpty()) {
-                one = prefix + one
-            }
-
-            arrayOf(one.toDouble(), two.toDouble())
-        } else arrayOf(one.toDouble(), 0.0)
-
-    }
-
-    private fun setLineAfterBackspace(){
+    private fun setLineAfterBackspace() {
         binding.tvInput.text = doBackspace(binding.tvInput.text.toString())
     }
 
     private fun doBackspace(lineToEdit: String): String {
         if (lineToEdit.isNotEmpty()) {
             val result = deleteLastSymbol(lineToEdit)
-            if (result.isEmpty()){
+            if (result.isEmpty()) {
                 lastNumeric = false
             }
             lastNumeric = !lineToEdit.startsWith("-") && lineToEdit.length > 1
@@ -365,23 +311,6 @@ class MainActivity : AppCompatActivity() {
         return ""
     }
 
-    private fun deleteLastSymbol(result: String): String {
-        return result.substring(0, result.length - 1)
-    }
-
-    private fun removeZeroAfterDot(result: String): String {
-        var value = result
-        if (result.contains(".0")) {
-            value = result.substring(0, result.length - 2)
-        }
-        return value
-    }
-
-    private fun isOperatorAdded(value: String): Boolean {
-        return if (value.startsWith("-") && !value.substring(1).contains("-")) false else {
-            value.contains("/") || value.contains("+") || value.contains("x") || value.contains("-")
-        }
-    }
 
     private fun addResultToDatabase(historyRepository: HistoryRepository, result: String) {
         lifecycleScope.launch {

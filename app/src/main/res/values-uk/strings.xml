@@ -28,7 +28,7 @@
     <string name="no_results_available">Немає доступних результатів розрахунків</string>
     <string name="content_description_for_settings_button">Налаштування</string>
     <string name="toolbar_settings_tv">НАЛАШТУВАННЯ</string>
-    <string name="app_version">0.8</string>
+    <string name="app_version">1.0</string>
     <string name="content_description_for_image_in_settings">Значок програми</string>
     <string name="dc_question_for_user">Ви впевнені?</string>
     <string name="dc_description_of_operation">Цим ви видалите усі результати розрахунків</string>
